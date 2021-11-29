@@ -74,31 +74,33 @@ struct AquariumTank
     void adjustPH(float phAdjustment);
 
     void ageTank(int days);
+    void init(float capacity);
 };
 
-AquariumTank::AquariumTank() :
-waterCapacity(15.f),
-pHLevel(7.f),
-currentWaterLevel(0.8f),
-evaporationRate(0.25f),
-fishLivingIn(0)
+void AquariumTank::init(float capacity)
 {
+    waterCapacity = capacity;
+    pHLevel = 7.f;
+    currentWaterLevel = 0.8f;
+    evaporationRate = 0.25f;
+    fishLivingIn = 0;
+}
+
+AquariumTank::AquariumTank()
+{
+    init(15.f);
     std::cout << "an AquariumTank was created" << std::endl; 
 }
 
-AquariumTank::AquariumTank(float capacity) :
-waterCapacity(capacity),
-pHLevel(7.f),
-currentWaterLevel(0.8f),
-evaporationRate(0.25f),
-fishLivingIn(0)
+AquariumTank::AquariumTank(float capacity)
 {
+    init(capacity);
     std::cout << "a " << std::fixed << waterCapacity << "G AquariumTank was created" << std::endl; 
 }
 
 AquariumTank::~AquariumTank()
 {
-        std::cout << "a " << std::fixed << waterCapacity << "G AquariumTank with " << fishLivingIn << " fish living in it was destroyed" << std::endl; 
+    std::cout << "a " << std::fixed << waterCapacity << "G AquariumTank with " << fishLivingIn << " fish living in it was destroyed" << std::endl; 
 }
 
 void AquariumTank::addFish(AquariumTank::Fish fish, int quantity)
