@@ -679,10 +679,13 @@ int main()
 
     m1.addOrRemoveEmployees(10);
     std::cout << "Museum m1 now has " << m1.employeeCount << " employees" << std::endl;
-    m1.printEmployeeCount("*m1*");
+    m1.printEmployeeCount("m1");
+    printEmptyLine();
     m1.addOrRemoveEmployees(-8);
     std::cout << "Museum m1 now has " << m1.employeeCount << " employees" << std::endl;
-    m1.printEmployeeCount("*m1*");
+    m1.printEmployeeCount("m1");
+    printEmptyLine();
+
     float m1Revenue = m1.chargeVisitor(10.f, visitor1);
     m1Revenue += m1.chargeVisitor(20.f, visitor2);
     std::cout << "Museum m1 extracted $" << std::fixed << m1Revenue << " from vistors" << std::defaultfloat << std::endl;
@@ -694,7 +697,8 @@ int main()
 
     m2.addOrRemoveEmployees(40);
     std::cout << "Museum m2 now has " << m2.employeeCount << " employees" << std::endl;
-    m2.printEmployeeCount("*m2*");
+    m2.printEmployeeCount("m2");
+    printEmptyLine();
     float m2Revenue = m2.chargeVisitor(25, visitor2);
     m2Revenue += m2.chargeVisitor(10.f, visitor1);
     std::cout << "Museum m2 extracted $" << std::fixed << m2Revenue << " from vistors" << std::defaultfloat << std::endl;
@@ -729,7 +733,8 @@ int main()
     std::cout   << "train1 object has " << train1.numberOfLocomotives << " locomotives and "
                 << train1.numberOfFreightCars << " freight cars and its conductors name is " << train1.conductorName << std::endl;
 
-    train1.printMessage("**train1**");
+    train1.printMessage("train1");
+    printEmptyLine();
 
     printEmptyLine();
 
@@ -743,7 +748,8 @@ int main()
     std::cout   << "train2 object has " << train2.numberOfLocomotives << " locomotives and "
                 << train2.numberOfFreightCars << " freight cars and its conductors name is " << train2.conductorName << std::endl;
 
-    train2.printMessage("**train2**");
+    train2.printMessage("train2");
+    printEmptyLine();
 
     printEmptyLine();
     //int dropofflist[]{5,-1,4,-4,3}; 
