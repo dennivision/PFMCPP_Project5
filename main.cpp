@@ -275,6 +275,8 @@ struct Museum
     void lobbyPoliticians(float bribeAmount);
 
     void simulateMonths(int months);
+
+    void printEmployeeCount(std::string name);
 };
 
 Museum::Museum()
@@ -382,6 +384,11 @@ void Museum::simulateMonths(int months)
 
 }
 
+void Museum::printEmployeeCount(std::string name)
+{
+    std::cout << "Museum " << name << " now has " << this->employeeCount << " employees" << std::endl;
+}
+
 /*
  copied UDT 3:
  */
@@ -401,6 +408,8 @@ struct FreightTrain
     void pickupOrDropoffCars(int numOfCars);
     void blowAirHorn(float durationInSeconds);
     void proceedSomeStops(unsigned long stops, std::vector<int> pickupDropOffList);
+
+    void printMessage(std::string name);
 };
 
 FreightTrain::FreightTrain()
@@ -458,6 +467,12 @@ void FreightTrain::proceedSomeStops(unsigned long stops, std::vector<int> pickup
         ++stopsTraveled;
     }
     std::cout << "Train Traveled a total of " << stopsTraveled << " out of " << stops << " and the car count changed by " << freightCarDelta << std::endl;
+}
+
+void FreightTrain::printMessage(std::string name)
+{
+    std::cout   << name <<" object has " << this->numberOfLocomotives << " locomotives and "
+                << this->numberOfFreightCars << " freight cars and its conductors name is " << this->conductorName << std::endl;
 }
 
 /*
@@ -664,8 +679,13 @@ int main()
 
     m1.addOrRemoveEmployees(10);
     std::cout << "Museum m1 now has " << m1.employeeCount << " employees" << std::endl;
+    m1.printEmployeeCount("m1");
+    printEmptyLine();
     m1.addOrRemoveEmployees(-8);
     std::cout << "Museum m1 now has " << m1.employeeCount << " employees" << std::endl;
+    m1.printEmployeeCount("m1");
+    printEmptyLine();
+
     float m1Revenue = m1.chargeVisitor(10.f, visitor1);
     m1Revenue += m1.chargeVisitor(20.f, visitor2);
     std::cout << "Museum m1 extracted $" << std::fixed << m1Revenue << " from vistors" << std::defaultfloat << std::endl;
@@ -677,6 +697,8 @@ int main()
 
     m2.addOrRemoveEmployees(40);
     std::cout << "Museum m2 now has " << m2.employeeCount << " employees" << std::endl;
+    m2.printEmployeeCount("m2");
+    printEmptyLine();
     float m2Revenue = m2.chargeVisitor(25, visitor2);
     m2Revenue += m2.chargeVisitor(10.f, visitor1);
     std::cout << "Museum m2 extracted $" << std::fixed << m2Revenue << " from vistors" << std::defaultfloat << std::endl;
@@ -701,13 +723,33 @@ int main()
     train1.proceedToNextStop();
     train1.blowAirHorn(1.f);
 
+/*
+    int numberOfLocomotives = 1;
+    int numberOfFreightCars = 1;
+    float maxCargoWeight { numberOfLocomotives * 8000.f };
+    float grossCargoWeight { numberOfFreightCars * 110.f };
+    std::string conductorName = "conductor";
+*/
+    std::cout   << "train1 object has " << train1.numberOfLocomotives << " locomotives and "
+                << train1.numberOfFreightCars << " freight cars and its conductors name is " << train1.conductorName << std::endl;
+
+    train1.printMessage("train1");
+    printEmptyLine();
+
     printEmptyLine();
 
     FreightTrain train2;
+    train2.conductorName = "bob";
     train2.pickupOrDropoffCars(80);
     train2.proceedToNextStop();
     train2.pickupOrDropoffCars(-40);
     train2.blowAirHorn(1.f);
+
+    std::cout   << "train2 object has " << train2.numberOfLocomotives << " locomotives and "
+                << train2.numberOfFreightCars << " freight cars and its conductors name is " << train2.conductorName << std::endl;
+
+    train2.printMessage("train2");
+    printEmptyLine();
 
     printEmptyLine();
     //int dropofflist[]{5,-1,4,-4,3}; 
