@@ -526,9 +526,9 @@ struct FreightLine
     FreightLine();
     ~FreightLine();
 
-    bool DispatchTrain(int train, std::vector<int> pickupDropoffList);
-    bool DispatchTrain(FreightTrain& train, std::vector<int> pickupDropoffList);
-    void DescribeTrain(const FreightTrain& train);
+    bool dispatchTrain(int train, std::vector<int> pickupDropoffList);
+    bool dispatchTrain(FreightTrain& train, std::vector<int> pickupDropoffList);
+    void describeTrain(const FreightTrain& train);
     JUCE_LEAK_DETECTOR(FreightLine)
 };
 
@@ -543,7 +543,7 @@ FreightLine::~FreightLine()
      std::cout   << "A new FreightLine was destroyed" << std::endl;
 }
 
-bool FreightLine::DispatchTrain(int train, std::vector<int> pickupDropoffList)
+bool FreightLine::dispatchTrain(int train, std::vector<int> pickupDropoffList)
 {
     switch(train)
     {
@@ -570,13 +570,13 @@ bool FreightLine::DispatchTrain(int train, std::vector<int> pickupDropoffList)
     return true;
 }
 
-bool FreightLine::DispatchTrain(FreightTrain& train, std::vector<int> pickupDropoffList)
+bool FreightLine::dispatchTrain(FreightTrain& train, std::vector<int> pickupDropoffList)
 {
     train.proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
     return true;
 }
 
-void FreightLine::DescribeTrain(const FreightTrain& train)
+void FreightLine::describeTrain(const FreightTrain& train)
 {
     std::cout << "----FreightLine::DescribeTrain()----" << std::endl;
     std::cout << "The trains conductor is named " << train.conductorName << std::endl;
@@ -822,12 +822,12 @@ int main()
     std::vector<int> lineOrderList{ 10, 0, -5, -15, 20, -25, 40, 10, 0, -6, -38  };
     std::vector<int> lineOrderList2{ 10, -10, 5, 15, 3, 1  };
 
-    line.freightLinePtr->DispatchTrain(0, lineOrderList);
+    line.freightLinePtr->dispatchTrain(0, lineOrderList);
     printEmptyLine();
-    line.freightLinePtr->DispatchTrain(1, lineOrderList2);
+    line.freightLinePtr->dispatchTrain(1, lineOrderList2);
     printEmptyLine();
 
-    line.freightLinePtr->DescribeTrain(*(line.freightLinePtr->train1.trainPtr)); // this feels wrong
+    line.freightLinePtr->describeTrain(*(line.freightLinePtr->train1.trainPtr)); // this feels wrong
 
     printSpacer ("AquariumStore object testing");
 
