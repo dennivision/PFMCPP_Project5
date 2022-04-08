@@ -73,6 +73,7 @@ void someMemberFunction(const Axe& axe);
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include "LeakedObjectDetector.h"
 /*
  copied UDT 1:
  */
@@ -105,6 +106,7 @@ struct AquariumTank
 
     void ageTank(int days);
     void init(float capacity);
+    JUCE_LEAK_DETECTOR(AquariumTank)
 };
 
 void AquariumTank::init(float capacity)
@@ -239,6 +241,17 @@ bool AquariumTank::Fish::isStillAlive(float waterPH, float waterSalinity)
     return (canLiveInThisWater(waterPH, waterSalinity) && (age < maxAge));
 }
 
+// WRAPPER CLASSES
+struct TankWrapper
+{
+    TankWrapper(AquariumTank* ptr) : tankPtr(ptr) {}
+    ~TankWrapper()
+    {
+        delete tankPtr;
+    }
+    AquariumTank* tankPtr = nullptr;
+};
+
 /*
  copied UDT 2:
  */
@@ -279,6 +292,7 @@ struct Museum
     void simulateMonths(int months);
 
     void printEmployeeCount(std::string name);
+    JUCE_LEAK_DETECTOR(Museum)
 };
 
 Museum::Museum()
@@ -391,6 +405,16 @@ void Museum::printEmployeeCount(std::string name)
     std::cout << "Museum " << name << " now has " << this->employeeCount << " employees" << std::endl;
 }
 
+struct MuseumWrapper
+{
+    MuseumWrapper(Museum* ptr) : museumPtr(ptr) {}
+    ~MuseumWrapper()
+    {
+        delete museumPtr;
+    }
+    Museum* museumPtr = nullptr;
+};
+
 /*
  copied UDT 3:
  */
@@ -412,6 +436,7 @@ struct FreightTrain
     void proceedSomeStops(unsigned long stops, std::vector<int> pickupDropOffList);
 
     void printMessage(std::string name);
+    JUCE_LEAK_DETECTOR(FreightTrain)
 };
 
 FreightTrain::FreightTrain()
@@ -477,27 +502,40 @@ void FreightTrain::printMessage(std::string name)
                 << this->numberOfFreightCars << " freight cars and its conductors name is " << this->conductorName << std::endl;
 }
 
+struct TrainWrapper
+{
+    TrainWrapper(FreightTrain* ptr) : trainPtr(ptr){}
+    ~TrainWrapper()
+    {
+        delete trainPtr;
+    }
+    FreightTrain* trainPtr = nullptr;
+};
+
 /*
  new UDT 4:
  with 2 member functions
  */
 struct FreightLine
 {
-    FreightTrain train1 { 4, 20, "Fred" };
-    FreightTrain train2 { 2, 25, "Bob" };
-    FreightTrain train3;
+    TrainWrapper train1 = TrainWrapper(new FreightTrain(4,20,"Fred"));
+    TrainWrapper train2 = TrainWrapper(new FreightTrain(2,25,"Bob"));
+    TrainWrapper train3 = TrainWrapper(new FreightTrain());
+    //TrainWrapper train3(new FreightTrain()); // not sure I understand why I can't declare and initialize wrapper class member variables like this
 
     FreightLine();
     ~FreightLine();
 
     bool DispatchTrain(int train, std::vector<int> pickupDropoffList);
-    void DescribeTrain(FreightTrain train);
+    bool DispatchTrain(FreightTrain& train, std::vector<int> pickupDropoffList);
+    void DescribeTrain(const FreightTrain& train);
+    JUCE_LEAK_DETECTOR(FreightLine)
 };
 
 FreightLine::FreightLine()
 {
     std::cout   << "A new FreightLine exists with three trains whose conductors are named "
-                << train1.conductorName << ", " <<train2.conductorName << ", and " << train3.conductorName << std::endl;
+                << train1.trainPtr->conductorName << ", " <<train2.trainPtr->conductorName << ", and " << train3.trainPtr->conductorName << std::endl;
 }
 
 FreightLine::~FreightLine()
@@ -511,17 +549,17 @@ bool FreightLine::DispatchTrain(int train, std::vector<int> pickupDropoffList)
     {
         case (0):
         {
-            train1.proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
+            train1.trainPtr->proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
             break;
         }
         case (1):
         {
-            train2.proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
+            train2.trainPtr->proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
             break;
         }
         case (3):
         {
-            train3.proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
+            train3.trainPtr->proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
             break;
         }
         default:
@@ -532,7 +570,13 @@ bool FreightLine::DispatchTrain(int train, std::vector<int> pickupDropoffList)
     return true;
 }
 
-void FreightLine::DescribeTrain(FreightTrain train)
+bool FreightLine::DispatchTrain(FreightTrain& train, std::vector<int> pickupDropoffList)
+{
+    train.proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
+    return true;
+}
+
+void FreightLine::DescribeTrain(const FreightTrain& train)
 {
     std::cout << "----FreightLine::DescribeTrain()----" << std::endl;
     std::cout << "The trains conductor is named " << train.conductorName << std::endl;
@@ -551,22 +595,32 @@ void FreightLine::DescribeTrain(FreightTrain train)
     std::cout << "------------------------------------" << std::endl << std::endl;
 }
 
+struct FreightLineWrapper
+{
+    FreightLineWrapper(FreightLine* ptr) : freightLinePtr(ptr){}
+    ~FreightLineWrapper()
+    {
+        delete freightLinePtr;
+    }
+    FreightLine* freightLinePtr = nullptr;
+};
+        
 /*
  new UDT 5:
  with 2 member functions
  */
 struct AquariumStore
 {
-    AquariumTank freshWaterTank1{120.f};
-    AquariumTank freshWaterTank2{55.f};
-    AquariumTank freshWaterTank3{25.f};
-    AquariumTank saltWaterTank{180.f};
-
+    TankWrapper freshWaterTank1 = TankWrapper(new AquariumTank(120.f));
+    TankWrapper freshWaterTank2 = TankWrapper(new AquariumTank(55.f));
+    TankWrapper freshWaterTank3 = TankWrapper(new AquariumTank(25.f));
+    TankWrapper saltWaterTank = TankWrapper(new AquariumTank(180.f));
     AquariumStore();
     ~AquariumStore();
 
     void topOffTanks();
     void ageTanks(int weeks);
+    JUCE_LEAK_DETECTOR(AquariumStore)
 };
 
 AquariumStore::AquariumStore()
@@ -581,22 +635,32 @@ AquariumStore::~AquariumStore()
 
 void AquariumStore::topOffTanks()
 {
-    while(freshWaterTank1.currentWaterLevel < 1.f)  { freshWaterTank1.addWater(5.f); }
-    while(freshWaterTank2.currentWaterLevel < 1.f)  { freshWaterTank2.addWater(5.f); }
-    while(freshWaterTank3.currentWaterLevel < 1.f)  { freshWaterTank3.addWater(5.f); }
-    while(saltWaterTank.currentWaterLevel < 1.f)    { saltWaterTank.addWater(5.f); }
+    while(freshWaterTank1.tankPtr->currentWaterLevel < 1.f)  { freshWaterTank1.tankPtr->addWater(5.f); }
+    while(freshWaterTank2.tankPtr->currentWaterLevel < 1.f)  { freshWaterTank2.tankPtr->addWater(5.f); }
+    while(freshWaterTank3.tankPtr->currentWaterLevel < 1.f)  { freshWaterTank3.tankPtr->addWater(5.f); }
+    while(saltWaterTank.tankPtr->currentWaterLevel < 1.f)    { saltWaterTank.tankPtr->addWater(5.f); }
 }
 
 void AquariumStore::ageTanks(int weeks)
 {
     if (weeks > 0)
     {
-        freshWaterTank1.ageTank(weeks * 7);
-        freshWaterTank2.ageTank(weeks * 7);
-        freshWaterTank3.ageTank(weeks * 7);
-        saltWaterTank.ageTank(weeks * 7);
+        freshWaterTank1.tankPtr->ageTank(weeks * 7);
+        freshWaterTank2.tankPtr->ageTank(weeks * 7);
+        freshWaterTank3.tankPtr->ageTank(weeks * 7);
+        saltWaterTank.tankPtr->ageTank(weeks * 7);
     }
 }
+
+struct AquariumStoreWrapper
+{
+    AquariumStoreWrapper(AquariumStore* ptr) : aquariumStorePtr(ptr){}
+    ~AquariumStoreWrapper()
+    {
+        delete aquariumStorePtr;
+    }
+    AquariumStore* aquariumStorePtr = nullptr;
+};
 
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
@@ -642,27 +706,28 @@ int main()
 
     printEmptyLine();;
 
-    AquariumTank tank1, tank2;
+    TankWrapper tank1 (new AquariumTank());
+    TankWrapper tank2 (new AquariumTank());
 
     printEmptyLine();
 
-    tank1.waterCapacity = 55.f;
-    tank1.currentWaterLevel = .5f;
-    tank1.addWater(20.f);
-    tank1.addFish(fish1, 10);
-    tank1.adjustPH(-.5f);
+    tank1.tankPtr->waterCapacity = 55.f;
+    tank1.tankPtr->currentWaterLevel = .5f;
+    tank1.tankPtr->addWater(20.f);
+    tank1.tankPtr->addFish(fish1, 10);
+    tank1.tankPtr->adjustPH(-.5f);
 
-    tank1.ageTank(10);
+    tank1.tankPtr->ageTank(10);
 
     printEmptyLine();
 
-    tank2.addWater(5.f);
-    tank2.adjustPH(1.5f);
-    tank2.addFish(fish2, 5);
-    tank2.adjustPH(-1.f);
-    tank2.addFish(fish2, 4);
+    tank2.tankPtr->addWater(5.f);
+    tank2.tankPtr->adjustPH(1.5f);
+    tank2.tankPtr->addFish(fish2, 5);
+    tank2.tankPtr->adjustPH(-1.f);
+    tank2.tankPtr->addFish(fish2, 4);
 
-    tank2.ageTank(120);
+    tank2.tankPtr->ageTank(120);
 
     printSpacer("Museum Object Testing");
 
@@ -673,42 +738,43 @@ int main()
     visitor1.name = "Bert";
     visitor2.name = "Ernie";
 
-    Museum m1, m2;
-    m1.exhibitCount = 5;
-    m2.exhibitCount = 10;
+    MuseumWrapper m1(new Museum());
+    MuseumWrapper m2(new Museum());
+    m1.museumPtr->exhibitCount = 5;
+    m2.museumPtr->exhibitCount = 10;
 
     printEmptyLine();
 
-    m1.addOrRemoveEmployees(10);
-    std::cout << "Museum m1 now has " << m1.employeeCount << " employees" << std::endl;
-    m1.printEmployeeCount("m1");
+    m1.museumPtr->addOrRemoveEmployees(10);
+    std::cout << "Museum m1 now has " << m1.museumPtr->employeeCount << " employees" << std::endl;
+    m1.museumPtr->printEmployeeCount("m1");
     printEmptyLine();
-    m1.addOrRemoveEmployees(-8);
-    std::cout << "Museum m1 now has " << m1.employeeCount << " employees" << std::endl;
-    m1.printEmployeeCount("m1");
+    m1.museumPtr->addOrRemoveEmployees(-8);
+    std::cout << "Museum m1 now has " << m1.museumPtr->employeeCount << " employees" << std::endl;
+    m1.museumPtr->printEmployeeCount("m1");
     printEmptyLine();
 
-    float m1Revenue = m1.chargeVisitor(10.f, visitor1);
-    m1Revenue += m1.chargeVisitor(20.f, visitor2);
+    float m1Revenue = m1.museumPtr->chargeVisitor(10.f, visitor1);
+    m1Revenue += m1.museumPtr->chargeVisitor(20.f, visitor2);
     std::cout << "Museum m1 extracted $" << std::fixed << m1Revenue << " from vistors" << std::defaultfloat << std::endl;
-    m1.lobbyPoliticians(20000);
+    m1.museumPtr->lobbyPoliticians(20000);
 
-    m1.simulateMonths(6);
+    m1.museumPtr->simulateMonths(6);
 
     printEmptyLine();
 
-    m2.addOrRemoveEmployees(40);
-    std::cout << "Museum m2 now has " << m2.employeeCount << " employees" << std::endl;
-    m2.printEmployeeCount("m2");
+    m2.museumPtr->addOrRemoveEmployees(40);
+    std::cout << "Museum m2 now has " << m2.museumPtr->employeeCount << " employees" << std::endl;
+    m2.museumPtr->printEmployeeCount("m2");
     printEmptyLine();
-    float m2Revenue = m2.chargeVisitor(25, visitor2);
-    m2Revenue += m2.chargeVisitor(10.f, visitor1);
+    float m2Revenue = m2.museumPtr->chargeVisitor(25, visitor2);
+    m2Revenue += m2.museumPtr->chargeVisitor(10.f, visitor1);
     std::cout << "Museum m2 extracted $" << std::fixed << m2Revenue << " from vistors" << std::defaultfloat << std::endl;
-    m2.lobbyPoliticians(4999.5);
-    m2.monthlyRetailIncome = 100000.f;
-    m2.simulateMonths(12);
-    m2.addOrRemoveEmployees(10);
-    m2.simulateMonths(12);
+    m2.museumPtr->lobbyPoliticians(4999.5);
+    m2.museumPtr->monthlyRetailIncome = 100000.f;
+    m2.museumPtr->simulateMonths(12);
+    m2.museumPtr->addOrRemoveEmployees(10);
+    m2.museumPtr->simulateMonths(12);
 
     printEmptyLine();
 
@@ -720,66 +786,59 @@ int main()
 
     printSpacer("FreightTrain object testing");
 
-    FreightTrain train1;
-    train1.pickupOrDropoffCars(50);
-    train1.proceedToNextStop();
-    train1.blowAirHorn(1.f);
+    TrainWrapper train1(new FreightTrain());
+    train1.trainPtr->pickupOrDropoffCars(50);
+    train1.trainPtr->proceedToNextStop();
+    train1.trainPtr->blowAirHorn(1.f);
 
-/*
-    int numberOfLocomotives = 1;
-    int numberOfFreightCars = 1;
-    float maxCargoWeight { numberOfLocomotives * 8000.f };
-    float grossCargoWeight { numberOfFreightCars * 110.f };
-    std::string conductorName = "conductor";
-*/
-    std::cout   << "train1 object has " << train1.numberOfLocomotives << " locomotives and "
-                << train1.numberOfFreightCars << " freight cars and its conductors name is " << train1.conductorName << std::endl;
+    std::cout   << "train1 object has " << train1.trainPtr->numberOfLocomotives << " locomotives and "
+                << train1.trainPtr->numberOfFreightCars << " freight cars and its conductors name is " << train1.trainPtr->conductorName << std::endl;
 
-    train1.printMessage("train1");
+    train1.trainPtr->printMessage("train1");
     printEmptyLine();
 
     printEmptyLine();
 
-    FreightTrain train2;
-    train2.conductorName = "bob";
-    train2.pickupOrDropoffCars(80);
-    train2.proceedToNextStop();
-    train2.pickupOrDropoffCars(-40);
-    train2.blowAirHorn(1.f);
+    TrainWrapper train2(new FreightTrain());
+    train2.trainPtr->conductorName = "bob";
+    train2.trainPtr->pickupOrDropoffCars(80);
+    train2.trainPtr->proceedToNextStop();
+    train2.trainPtr->pickupOrDropoffCars(-40);
+    train2.trainPtr->blowAirHorn(1.f);
 
-    std::cout   << "train2 object has " << train2.numberOfLocomotives << " locomotives and "
-                << train2.numberOfFreightCars << " freight cars and its conductors name is " << train2.conductorName << std::endl;
+    std::cout   << "train2 object has " << train2.trainPtr->numberOfLocomotives << " locomotives and "
+                << train2.trainPtr->numberOfFreightCars << " freight cars and its conductors name is " << train2.trainPtr->conductorName << std::endl;
 
-    train2.printMessage("train2");
+    train2.trainPtr->printMessage("train2");
     printEmptyLine();
 
     printEmptyLine();
-    //int dropofflist[]{5,-1,4,-4,3}; 
     std::vector<int> dropofflist{5,-1,4,-4,3};
-    train2.proceedSomeStops(5, dropofflist);
+    train2.trainPtr->proceedSomeStops(5, dropofflist);
 
     printSpacer("FreightLine object testing");
 
-    FreightLine line;
+    FreightLineWrapper line(new FreightLine());
     std::vector<int> lineOrderList{ 10, 0, -5, -15, 20, -25, 40, 10, 0, -6, -38  };
     std::vector<int> lineOrderList2{ 10, -10, 5, 15, 3, 1  };
 
-    line.DispatchTrain(0, lineOrderList);
+    line.freightLinePtr->DispatchTrain(0, lineOrderList);
     printEmptyLine();
-    line.DispatchTrain(1, lineOrderList2);
+    line.freightLinePtr->DispatchTrain(1, lineOrderList2);
     printEmptyLine();
 
-    line.DescribeTrain(line.train1);
+    line.freightLinePtr->DescribeTrain(*(line.freightLinePtr->train1.trainPtr)); // this feels wrong
 
     printSpacer ("AquariumStore object testing");
 
-    AquariumStore store;
+    //AquariumStore store;
+    AquariumStoreWrapper store(new AquariumStore());
     printEmptyLine();
-    store.topOffTanks();
+    store.aquariumStorePtr->topOffTanks();
     printEmptyLine();
-    store.ageTanks(12);
+    store.aquariumStorePtr->ageTanks(12);
     printEmptyLine();
-    store.topOffTanks();
+    store.aquariumStorePtr->topOffTanks();
     printEmptyLine();
 
     std::cout << "good to go!" << std::endl;
