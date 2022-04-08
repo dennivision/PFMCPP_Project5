@@ -367,11 +367,12 @@ void Museum::simulateMonths(int months)
     while(month < months)
     {
         ++month;
-        int visitorsThisMonth = monthlyRetailIncome / entranceFee;
-        int deviation = visitorsThisMonth * 20 / 100;
-        visitorsThisMonth = (rand() % deviation) + (visitorsThisMonth - (deviation / 2));
+        float visitorsThisMonth = monthlyRetailIncome / entranceFee;
+        //float deviation = visitorsThisMonth * 20 / 100;
+        //visitorsThisMonth = (rand() % static_cast<int>(deviation) ) + (visitorsThisMonth - (deviation / 2)); // much more interesting
+        visitorsThisMonth += (rand() % 200 ) - 100; // vary visitor count from ~ -100 to +100 of calculated value
         std::cout << "In month " << month << " there were " << visitorsThisMonth << " visitors" << std::endl;
-        int lastVisitor = visitors + visitorsThisMonth;
+        float lastVisitor = visitors + visitorsThisMonth;
         while(visitors <= lastVisitor)
         {
             ++visitors;
@@ -385,9 +386,14 @@ void Museum::simulateMonths(int months)
         if(balance < (employeeCount * averageSalary))
         {
             std::cout << "Museum cant pay " << employeeCount << " employees. Max it can pay is " << (balance / averageSalary) << std::endl;
-            int employeesToFire = employeeCount - (balance / averageSalary);
-            employeeCount -= employeesToFire;
-            std::cout << "Had to fire " << employeesToFire << " employees" << std::endl;
+            float maxEmployees = balance/averageSalary;
+            int firedEmployees = 0;
+            while(employeeCount > maxEmployees)
+            {
+                --employeeCount;
+                ++firedEmployees;
+            }
+            std::cout << "Had to fire " << firedEmployees << " employees" << std::endl;
         }
         balance -= employeeCount * averageSalary;
 
@@ -690,7 +696,7 @@ void printEmptyLine()
 #include <iostream>
 int main()
 {
-    srand(  time( nullptr ) );
+    //srand(  time( nullptr ) );
 
     printSpacer("AquariumTank object testing");
 
