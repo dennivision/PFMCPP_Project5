@@ -12,7 +12,7 @@ FreightLine::~FreightLine()
      std::cout   << "A new FreightLine was destroyed" << std::endl;
 }
 
-bool FreightLine::dispatchTrain(int train, std::vector<int> pickupDropoffList)
+bool FreightLine::dispatchTrain(const int train, const std::vector<int>& pickupDropoffList)
 {
     switch(train)
     {
@@ -39,7 +39,7 @@ bool FreightLine::dispatchTrain(int train, std::vector<int> pickupDropoffList)
     return true;
 }
 
-bool FreightLine::dispatchTrain(FreightTrain& train, std::vector<int> pickupDropoffList)
+bool FreightLine::dispatchTrain(FreightTrain& train, const std::vector<int>& pickupDropoffList)
 {
     train.proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
     return true;

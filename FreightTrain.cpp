@@ -23,7 +23,7 @@ void FreightTrain::proceedToNextStop()
     std::cout << "FreightTrain::proceedToNextStop() - the train proceeds to the next stop" << std::endl;
 }
 
-void FreightTrain::pickupOrDropoffCars(int numOfCars)
+void FreightTrain::pickupOrDropoffCars(const int numOfCars)
 {
     numberOfFreightCars += numOfCars;
     if (numberOfFreightCars < 0)
@@ -32,7 +32,7 @@ void FreightTrain::pickupOrDropoffCars(int numOfCars)
     std::cout << "FreightTrain::pickupOrDropoffCars() called - train now has " << numberOfFreightCars << " cars" << std::endl; 
 }
 
-void FreightTrain::blowAirHorn(float durationInSeconds)
+void FreightTrain::blowAirHorn(const float durationInSeconds)
 {
     if (durationInSeconds > 0.f)
     {
@@ -40,7 +40,7 @@ void FreightTrain::blowAirHorn(float durationInSeconds)
     }
 }
 
-void FreightTrain::proceedSomeStops(unsigned long stops, std::vector<int> pickupDropoffList)
+void FreightTrain::proceedSomeStops(const unsigned long stops, const std::vector<int> pickupDropoffList)
 {
     unsigned long stopsTraveled = 0;
     int freightCarDelta = 0;
@@ -57,7 +57,7 @@ void FreightTrain::proceedSomeStops(unsigned long stops, std::vector<int> pickup
     std::cout << "Train Traveled a total of " << stopsTraveled << " out of " << stops << " and the car count changed by " << freightCarDelta << std::endl;
 }
 
-void FreightTrain::printMessage(std::string name)
+void FreightTrain::printMessage(const std::string name) const
 {
     std::cout   << name <<" object has " << this->numberOfLocomotives << " locomotives and "
                 << this->numberOfFreightCars << " freight cars and its conductors name is " << this->conductorName << std::endl;

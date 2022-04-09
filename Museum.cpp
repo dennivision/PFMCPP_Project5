@@ -10,18 +10,18 @@ Museum::~Museum()
     std::cout << "a Museum object was destroyed" << std::endl; 
 }
 
-float Museum::chargeVisitor(float amountToCharge, Museum::Visitor visitor)
+float Museum::chargeVisitor(const float amountToCharge, Museum::Visitor visitor)
 {
     std::cout << "Museum::chargeVisitor() a vistor named '" << visitor.name << "' was charged $" << amountToCharge << std::endl; 
     return visitor.payAdmissionFee(amountToCharge);
 }
 
-void Museum::addOrRemoveEmployees(int numberOfEmployees)
+void Museum::addOrRemoveEmployees(const int numberOfEmployees)
 {
     employeeCount += numberOfEmployees;
 }
 
-void Museum::lobbyPoliticians(float bribeAmount)
+void Museum::lobbyPoliticians(const float bribeAmount)
 {
     if(bribeAmount > 10000.f)
     {
@@ -45,26 +45,26 @@ Museum::Visitor::~Visitor()
     std::cout << "a Museum::Visitor named '" << name << "' from the country '" << nationality << "' was destroyed" << std::endl; 
 }
 
-float Museum::Visitor::payAdmissionFee(float feeAmount)
+float Museum::Visitor::payAdmissionFee(const float feeAmount)
 {
-    ++timesVisited; // bit confused why this doesn't appear to update the timesVisited int
+    ++timesVisited;
     std::cout   << "Museum::Vistor:payAdmissionFee() - A visitor named '" << name << "' payed an admmission fee of $"
                 << std::fixed << feeAmount << " and has now visited " << timesVisited << " times" << std::endl;
     return feeAmount;
 }
 
-void Museum::Visitor::viewExhibit(int exhibitNum)
+void Museum::Visitor::viewExhibit(const int exhibitNum)
 {
     std::cout << "Museum::Vistor:viewExhibit() - A visitor named '" << name << "' viewed exhibit # " << exhibitNum << std::endl;
 }
 
-void Museum::Visitor::payVendor(int vendorID, float amount)
+void Museum::Visitor::payVendor(const int vendorID, const float amount) const
 {
     std::cout   << "Museum::Vistor:payVendor() - A visitor named '" << name << "' payed vendor # " << vendorID
                 << " $" << std::fixed << std::setprecision(2) << amount << std::endl;
 }
 
-void Museum::simulateMonths(int months)
+void Museum::simulateMonths(const int months)
 {
     int visitors = 0;
     float startingBalance = balance;

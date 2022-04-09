@@ -10,7 +10,7 @@ AquariumStore::~AquariumStore()
     std::cout << "An AquariumStore was destroyed" << std::endl;
 }
 
-void AquariumStore::topOffTanks()
+void AquariumStore::topOffTanks() const
 {
     while(freshWaterTank1.tankPtr->currentWaterLevel < 1.f)  { freshWaterTank1.tankPtr->addWater(5.f); }
     while(freshWaterTank2.tankPtr->currentWaterLevel < 1.f)  { freshWaterTank2.tankPtr->addWater(5.f); }
@@ -18,7 +18,7 @@ void AquariumStore::topOffTanks()
     while(saltWaterTank.tankPtr->currentWaterLevel < 1.f)    { saltWaterTank.tankPtr->addWater(5.f); }
 }
 
-void AquariumStore::ageTanks(int weeks)
+void AquariumStore::ageTanks(const int weeks) const
 {
     if (weeks > 0)
     {

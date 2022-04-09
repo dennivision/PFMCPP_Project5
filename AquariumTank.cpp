@@ -1,6 +1,6 @@
 #include "AquariumTank.h"
 
-void AquariumTank::init(float capacity)
+void AquariumTank::init(const float capacity)
 {
     waterCapacity = capacity;
     pHLevel = 7.f;
@@ -15,7 +15,7 @@ AquariumTank::AquariumTank()
     std::cout << "an AquariumTank was created" << std::endl; 
 }
 
-AquariumTank::AquariumTank(float capacity)
+AquariumTank::AquariumTank(const float capacity)
 {
     init(capacity);
     std::cout << "a " << std::fixed << waterCapacity << "G AquariumTank was created" << std::endl; 
@@ -26,7 +26,7 @@ AquariumTank::~AquariumTank()
     std::cout << "a " << std::fixed << waterCapacity << "G AquariumTank with " << fishLivingIn << " fish living in it was destroyed" << std::endl; 
 }
 
-void AquariumTank::addFish(AquariumTank::Fish fish, int quantity)
+void AquariumTank::addFish(const AquariumTank::Fish fish, const int quantity)
 {
     if( fish.canLiveInThisWater(pHLevel, 0.f) )
     {
@@ -39,7 +39,7 @@ void AquariumTank::addFish(AquariumTank::Fish fish, int quantity)
     }
 }
 
-void AquariumTank::addWater(float amountOfWater)
+void AquariumTank::addWater(const float amountOfWater)
 {
     float currentWaterAmount = waterCapacity * currentWaterLevel;
     std::cout   << "AquariumTank::addWater() trying to add " << std::fixed << amountOfWater << " gallons of water to a "
@@ -57,7 +57,7 @@ void AquariumTank::addWater(float amountOfWater)
                 << "% of " <<  waterCapacity << " gallons" << std::endl; 
 }
 
-void AquariumTank::adjustPH(float phAdjustment)
+void AquariumTank::adjustPH(const float phAdjustment)
 {
     pHLevel += phAdjustment;
     if(pHLevel > 14.f)
@@ -69,7 +69,7 @@ void AquariumTank::adjustPH(float phAdjustment)
     std::cout << "AquariumTank::adjustPH() new pH level: " << pHLevel << std::endl; 
 }
 
-void AquariumTank::ageTank(int days)
+void AquariumTank::ageTank(const int days)
 {
     float currentWaterAmount = waterCapacity * currentWaterLevel;
     float waterEvaporated = 0;
@@ -110,7 +110,7 @@ AquariumTank::Fish::~Fish()
     std::cout << "AquariumTank::Fish '" << name << "' needs to be flushed" << std::endl;
 }
 
-bool AquariumTank::Fish::canLiveInThisWater(float waterPH, float waterSalinity)
+bool AquariumTank::Fish::canLiveInThisWater(const float waterPH, const float waterSalinity) const
 {
     if((waterPH >= 6.f && waterPH <= 8.f) && (waterSalinity < maxSalinity))
     {
@@ -121,13 +121,13 @@ bool AquariumTank::Fish::canLiveInThisWater(float waterPH, float waterSalinity)
     return false;
 }
 
-void AquariumTank::Fish::ageFish(float amountOfTime)
+void AquariumTank::Fish::ageFish(const float amountOfTime)
 { 
     age += amountOfTime;
     std::cout << "AquariumTank::Fish " <<  name << " is this old: " << age << std::endl;
 }
 
-bool AquariumTank::Fish::isStillAlive(float waterPH, float waterSalinity)
+bool AquariumTank::Fish::isStillAlive(const float waterPH, const float waterSalinity) const
 {
     return (canLiveInThisWater(waterPH, waterSalinity) && (age < maxAge));
 }

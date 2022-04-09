@@ -15,8 +15,8 @@ struct FreightLine
     FreightLine();
     ~FreightLine();
 
-    bool dispatchTrain(int train, std::vector<int> pickupDropoffList);
-    bool dispatchTrain(FreightTrain& train, std::vector<int> pickupDropoffList);
+    bool dispatchTrain(const int train, const std::vector<int>& pickupDropoffList);
+    bool dispatchTrain(FreightTrain& train, const std::vector<int>& pickupDropoffList);
     void describeTrain(const FreightTrain& train);
     JUCE_LEAK_DETECTOR(FreightLine)
 };

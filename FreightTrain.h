@@ -17,10 +17,10 @@ struct FreightTrain
     ~FreightTrain();
 
     void proceedToNextStop();
-    void pickupOrDropoffCars(int numOfCars);
-    void blowAirHorn(float durationInSeconds);
-    void proceedSomeStops(unsigned long stops, std::vector<int> pickupDropOffList);
+    void pickupOrDropoffCars(const int numOfCars);
+    void blowAirHorn(const float durationInSeconds);
+    void proceedSomeStops(const unsigned long stops, const std::vector<int> pickupDropOffList);
 
-    void printMessage(std::string name);
+    void printMessage(const std::string name) const;
     JUCE_LEAK_DETECTOR(FreightTrain)
 };

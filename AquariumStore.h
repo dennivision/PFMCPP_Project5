@@ -13,7 +13,7 @@ struct AquariumStore
     AquariumStore();
     ~AquariumStore();
 
-    void topOffTanks();
-    void ageTanks(int weeks);
+    void topOffTanks() const;
+    void ageTanks(const int weeks) const;
     JUCE_LEAK_DETECTOR(AquariumStore)
 };

@@ -15,30 +15,32 @@ struct Museum
     float averageSalary = 3000.f;
     float entranceFee = 25.f;
 
-    struct Visitor
-    {
-        std::string name, nationality;
-        int timesVisited, age;
-        float satisfaction = 0.5f;
-
-        Visitor();
-        Visitor(std::string n);
-        ~Visitor();
-
-        float payAdmissionFee(float feeAmount);        
-        void viewExhibit(int exhibitNum);
-        void payVendor(int vendorID, float amount);
-    };
+    struct Visitor;
 
     Museum();
     ~Museum();
 
-    float chargeVisitor(float amountToCharge, Visitor visitor) ;
-    void addOrRemoveEmployees(int numberOfEmployees);// { employeeCount += numberOfEmployees; }
-    void lobbyPoliticians(float bribeAmount);
+    float chargeVisitor(const float amountToCharge, Visitor visitor) ;
+    void addOrRemoveEmployees(const int numberOfEmployees);
+    void lobbyPoliticians(const float bribeAmount);
 
-    void simulateMonths(int months);
+    void simulateMonths(const int months);
 
-    void printEmployeeCount(std::string name);
+    void printEmployeeCount(const std::string name);
     JUCE_LEAK_DETECTOR(Museum)
+};
+
+struct Museum::Visitor
+{
+    std::string name, nationality;
+    int timesVisited, age;
+    float satisfaction = 0.5f;
+
+    Visitor();
+    Visitor(std::string n);
+    ~Visitor();
+
+    float payAdmissionFee(const float feeAmount);        
+    void viewExhibit(const int exhibitNum);
+    void payVendor(const int vendorID, const float amount) const;
 };
