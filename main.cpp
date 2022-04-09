@@ -72,66 +72,7 @@ void Axe::aConstMemberFunction() const { }
 // #include "Museum.h"
 // #include "FreightTrain.h"
 // #include "FreightLine.h"
-
-
-
         
-/*
- new UDT 5:
- with 2 member functions
- */
-struct AquariumStore
-{
-    TankWrapper freshWaterTank1 = TankWrapper(new AquariumTank(120.f));
-    TankWrapper freshWaterTank2 = TankWrapper(new AquariumTank(55.f));
-    TankWrapper freshWaterTank3 = TankWrapper(new AquariumTank(25.f));
-    TankWrapper saltWaterTank = TankWrapper(new AquariumTank(180.f));
-    AquariumStore();
-    ~AquariumStore();
-
-    void topOffTanks();
-    void ageTanks(int weeks);
-    JUCE_LEAK_DETECTOR(AquariumStore)
-};
-
-AquariumStore::AquariumStore()
-{
-    std::cout << "An AquariumStore was created" << std::endl;
-}
-
-AquariumStore::~AquariumStore()
-{
-    std::cout << "An AquariumStore was destroyed" << std::endl;
-}
-
-void AquariumStore::topOffTanks()
-{
-    while(freshWaterTank1.tankPtr->currentWaterLevel < 1.f)  { freshWaterTank1.tankPtr->addWater(5.f); }
-    while(freshWaterTank2.tankPtr->currentWaterLevel < 1.f)  { freshWaterTank2.tankPtr->addWater(5.f); }
-    while(freshWaterTank3.tankPtr->currentWaterLevel < 1.f)  { freshWaterTank3.tankPtr->addWater(5.f); }
-    while(saltWaterTank.tankPtr->currentWaterLevel < 1.f)    { saltWaterTank.tankPtr->addWater(5.f); }
-}
-
-void AquariumStore::ageTanks(int weeks)
-{
-    if (weeks > 0)
-    {
-        freshWaterTank1.tankPtr->ageTank(weeks * 7);
-        freshWaterTank2.tankPtr->ageTank(weeks * 7);
-        freshWaterTank3.tankPtr->ageTank(weeks * 7);
-        saltWaterTank.tankPtr->ageTank(weeks * 7);
-    }
-}
-
-struct AquariumStoreWrapper
-{
-    AquariumStoreWrapper(AquariumStore* ptr) : aquariumStorePtr(ptr){}
-    ~AquariumStoreWrapper()
-    {
-        delete aquariumStorePtr;
-    }
-    AquariumStore* aquariumStorePtr = nullptr;
-};
 
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
