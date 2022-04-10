@@ -25,14 +25,14 @@ struct AquariumTank
 };
 
 struct AquariumTank::Fish
-    {
-        std::string name, breed;
-        float maxSalinity, age, maxAge;
-        
-        Fish();
-        ~Fish();
+{
+    std::string name, breed;
+    float maxSalinity, age, maxAge;
+    
+    Fish();
+    ~Fish();
 
-        bool canLiveInThisWater(const float waterPH, const float waterSalinity) const;
-        void ageFish(const float amountOfTime);
-        bool isStillAlive(const float waterPH, const float waterSalinity) const;
-    };
+    bool canLiveInThisWater(const float waterPH, const float waterSalinity) const;
+    void ageFish(const float amountOfTime);
+    bool isStillAlive(const float waterPH, const float waterSalinity) const;
+};
