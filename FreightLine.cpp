@@ -4,7 +4,7 @@
 FreightLine::FreightLine()
 {
     std::cout   << "A new FreightLine exists with three trains whose conductors are named "
-                << train1.trainPtr->conductorName << ", " <<train2.trainPtr->conductorName << ", and " << train3.trainPtr->conductorName << std::endl;
+                << train1.conductorName << ", " <<train2.conductorName << ", and " << train3.conductorName << std::endl;
 }
 
 FreightLine::~FreightLine()
@@ -12,23 +12,23 @@ FreightLine::~FreightLine()
      std::cout   << "A new FreightLine was destroyed" << std::endl;
 }
 
-bool FreightLine::dispatchTrain(const int train, const std::vector<int>& pickupDropoffList)
+bool FreightLine::dispatchTrain(const int trainNumber, const std::vector<int>& pickupDropoffList)
 {
-    switch(train)
+    switch(trainNumber)
     {
         case (0):
         {
-            train1.trainPtr->proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
+            train1.proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
             break;
         }
         case (1):
         {
-            train2.trainPtr->proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
+            train2.proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
             break;
         }
         case (3):
         {
-            train3.trainPtr->proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
+            train3.proceedSomeStops(pickupDropoffList.size(), pickupDropoffList);
             break;
         }
         default:

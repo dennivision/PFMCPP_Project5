@@ -241,7 +241,7 @@ int main()
     line.freightLinePtr->dispatchTrain(1, lineOrderList2);
     printEmptyLine();
 
-    line.freightLinePtr->describeTrain(*(line.freightLinePtr->train1.trainPtr)); // this feels wrong
+    line.freightLinePtr->describeTrain(line.freightLinePtr->train1);
 
     printSpacer ("AquariumStore object testing");
 

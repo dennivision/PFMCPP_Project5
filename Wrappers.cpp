@@ -4,6 +4,7 @@
 #include "Museum.h"
 #include "FreightTrain.h"
 #include "FreightLine.h"
+#include "AquariumStore.h"
 
 TankWrapper::TankWrapper(AquariumTank* ptr) : tankPtr(ptr) {}
 TankWrapper::~TankWrapper()
