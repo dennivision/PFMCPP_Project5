@@ -68,11 +68,11 @@ void Axe::aConstMemberFunction() const { }
 
 #include "Wrappers.h"
 
-// #include "AquariumTank.h"
-// #include "Museum.h"
-// #include "FreightTrain.h"
-// #include "FreightLine.h"
-// #include "AquariumStore.h"
+#include "AquariumTank.h"
+#include "Museum.h"
+#include "FreightTrain.h"
+#include "FreightLine.h"
+#include "AquariumStore.h"
 
         
 
